@@ -1,0 +1,29 @@
+{
+  "name": "shoppingmall_ex1",
+  "version": "1.0.0",
+  "description": "shoppingmall_ex1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ping12271/shoppingmall_ex1.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ping12271/shoppingmall_ex1/issues"
+  },
+  "homepage": "https://github.com/ping12271/shoppingmall_ex1#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.13",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
