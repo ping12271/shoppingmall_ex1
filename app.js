@@ -6,6 +6,7 @@ const app = express()
 
 const productRoute = require('./routes/product')
 const orderRoute = require('./routes/order')
+const userRoute = require('./routes/user')
 
 
 //DB연결
@@ -27,6 +28,7 @@ app.use(bodyParser.urlencoded({extended: false}))
 
 app.use('/product', productRoute)
 app.use('/order', orderRoute)
+app.use('/user', userRoute) // /user를 요청하면 userRoute로 이동한다.
 
 const port = 8000
 
