@@ -4,8 +4,9 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const app = express()
 
-
 const productRoute = require('./routes/product')
+const orderRoute = require('./routes/order')
+
 
 //DB연결
 const dbAdress = "mongodb+srv://ping12271:Ghdghd11@cluster0.tqgbb.mongodb.net/shoppingmall?retryWrites=true&w=majority"
@@ -24,9 +25,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 
 
-
-
 app.use('/product', productRoute)
+app.use('/order', orderRoute)
 
 const port = 8000
 

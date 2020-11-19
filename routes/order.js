@@ -1,150 +1,128 @@
 const express = require('express')
+const { disconnect } = require('mongoose')
 const router = express.Router()
 
-const productModel = require("../models/product")
 
+const orderModel = require('../models/order')
+// order 등록하는 API
 router.post('/', (req, res) => {
-    const newProduct = new productModel ({
-        name : req.body.productName,
-        price : req.body.productPrice
+    const newOrder = new orderModel({
+        product : req.body.productID,
+        quantity : req.body.qty
     })
-    
-    newProduct
+
+    newOrder
         .save()
         .then(doc => {
+
+            console.log(doc)
+
             res.json({
                 message : "saved data",
-                productInfo : {
+                orderInfo : {
                     id : doc._id,
-                    name : doc.name,
-                    price : doc.price,
+                    product : doc.product,
+                    quantity : doc.quantity,
                     request : {
                         type : "GET",
-                        url : "http://localhost:8000/product" + doc._id
+                        url : "http://localhost8000/order/" + doc._id
                     }
                 }
             })
         })
         .catch(err => {
-            res.json({
+            res.status(500).json({
                 message : err
             })
         })
-
 })
-
+// order 전체리스트 불러오기 API
 router.get('/', (req, res) => {
 
-    productModel
+    console.log("+++++++++++++")
+    orderModel
         .find()
         .then(docs => {
             res.json({
-                message : "successful get product",
+                message : '모두 찾아',
                 count : docs.length,
-                products : docs.map(doc => {
+                order : docs.map(doc => {
                     return {
                         id : doc._id,
-                        name : doc.name,
-                        price : doc.price,
+                        product : doc.product,
+                        quantity : doc.quantity,
                         request : {
                             type : "GET",
-                            url : "http://localhost:8000/product/" + doc._id
+                            url : "http://localhost:8000/order/" + doc._id
                         }
                     }
                 })
-
             })
         })
         .catch(err => {
-            res.json({
+            res.status(500).json({
                 message : err
             })
         })
 })
-
+// order 상세 API
 router.get('/:productID', (req, res) => {
-
     const id = req.params.productID
-    productModel
+    orderModel
         .findById(id)
         .then(doc => {
+            console.log(doc)
             res.json({
-                message : '하나만 불러와라 ' + id,
+                message : '상세보기' + id,
                 product : {
                     id : doc._id,
-                    name : doc.name,
-                    price : doc.price
+                    product: doc.product,
+                    quantity : doc.quantity
                 },
                 request: {
                     type : "GET",
-                    url : "http://localhost:8000/product"
+                    url : "http://localhost:8000/order"
                 }
             })
         })
         .catch(err => {
-            res.json({
-                message : err
-            })
-        })
-
-})
-
-router.patch('/:productID', (req, res) => {
-    
-    const id = req.params.productID
-    const updateOps = {};
-    for (const ops of req.body) {
-        updateOps[ops.propName] = ops.value;
-    }
-
-    productModel
-        .findOneAndUpdate(id, {$set: updateOps})
-        .then(() => {
-            res.json({
-                message : 'updated at ' + id,
-                request : {
-                    type : "GET",
-                    url : "http://localhost:8000/product" + id
-                }
-            })
-        })
-        .catch(err => {
-            res.json({
-                message : err
-            })
-        })
-
-})
-
-router.delete('/', (req, res) => {
-    productModel
-        .remove()
-        .then(() => {
-            res.json({
-                message : "deleted all product",
-                request : {
-                    type: "GET",
-                    url : "http://localhost:8000/product"
-                }
-            })
-        })
-        .catch(err => {
-            res.json({
+            res.status(500).json({
                 message : err
             })
         })
 })
 
+// 특정 order 삭제하기
 router.delete('/:productID', (req, res) => {
     const id = req.params.productID
-    productModel
+    orderModel
         .findByIdAndDelete(id)
         .then(() => {
             res.json({
-                message : '선택 삭제' + id,
-                request: {
+                message : '특정 삭제' + id,
+                request : {
                     type : "GET",
-                    url : "http://localhost:8000/product" + id
+                    url : "http://localhost:8000/order"
+                }
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                message : err
+            })
+        })
+})
+
+// order 전체삭제 API
+router.delete('/', (req, res) => {
+    orderModel
+        .remove()
+        .then(() => {
+            res.json({
+                message : '전체삭제',
+                request : {
+                    type : "GET",
+                    url : "http://localhost:8000/order"
                 }
             })
         })
@@ -154,4 +132,5 @@ router.delete('/:productID', (req, res) => {
             })
         })
 })
+
 module.exports = router
